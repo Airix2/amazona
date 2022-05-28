@@ -9,6 +9,7 @@ import darkTheme from '../styles/theme/darkTheme';
 import '../styles/globals.css';
 import { useDarkMode } from '../utils/useDarkMode';
 import { StateProvider } from '../utils/cart/stateContext'
+import { SnackbarProvider } from 'notistack';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -29,9 +30,11 @@ const MyApp = (props) => {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={themeMode}>
         <CssBaseline />
-        <StateProvider>
-          <Component {...pageProps} themeObj={{theme: theme, toggleTheme: toggleTheme}} />
-        </StateProvider>
+        <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+          <StateProvider>
+            <Component {...pageProps} themeObj={{theme: theme, toggleTheme: toggleTheme}} />
+          </StateProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </CacheProvider>
   );

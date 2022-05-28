@@ -5,7 +5,9 @@ export const StateContext = createContext();
 
 const emptyState = {
     cart: {
-        cartItems:[]
+        cartItems:[],
+        shippingAddress: {},
+        paymentMethod: ''
     },
     user: null,
     initial: true
@@ -37,6 +39,12 @@ function reducer(state, action) {
         }
         case 'USER_LOGOUT': {
             return { ...state, user: null, cart: {cartItems: []}}
+        }
+        case 'SAVE_SHIPPING_ADDRESS': {
+            return { ...state, cart: {...state.cart, shippingAddress: action.payload }}
+        }
+        case 'SAVE_PAYMENT_METHOD': {
+            return { ...state, cart: {...state.cart, paymentMethod: action.payload }}
         }
         default:
             return state;

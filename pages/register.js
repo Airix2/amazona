@@ -1,5 +1,5 @@
 import { Button, Link, List, ListItem, TextField, Typography } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 const Layout = dynamic(
     () => import('../components/Layout'),
@@ -26,10 +26,14 @@ export default function Login({themeObj}) {
     }, [])
     
 
-    const submitHandler = async ({email, password}) => {
+    const submitHandler = async ({name, email, password, confPassword}) => {
         closeSnackbar();
+        if (password !== confPassword) {
+            enqueueSnackbar("Passwords don't match", {variant: 'error'})
+            return
+        }
         try {
-            const {data} = await axios.post('/api/users/login', {email, password});
+            const {data} = await axios.post('/api/users/register', {email, password, name, confPassword});
             dispatch({type: 'USER_LOGIN', payload: data})
             router.push(router.query.redirect || '/')  // redirects to the query
         } catch (error) {
@@ -39,12 +43,34 @@ export default function Login({themeObj}) {
     }
 
     return (
-        <Layout title="Login" themeObj={themeObj}>
+        <Layout title="Shipping" themeObj={themeObj}>
             <form onSubmit={handleSubmit(submitHandler)} style={s.form}>
                 <Typography component="h1" variant="h1">
-                    Login
+                    Register
                 </Typography>
                 <List>
+                    <ListItem>
+                        <Controller 
+                            name="name"
+                            control={ control }
+                            defaultValue=""
+                            rules={{required: true, minLength: 2 }}
+                            render={({field}) => (
+                                <TextField 
+                                    variant="outlined" fullWidth id="name" label="Name" 
+                                    inputProps={{type: 'text'}} error={Boolean(errors.name)}
+                                    helperText={
+                                        errors.name 
+                                            ? (errors.name.type === 'minLength' 
+                                                ? 'Name length has to be 2 characters or more' 
+                                                : 'Name is required') 
+                                            : ''
+                                    }
+                                    {...field}
+                                ></TextField>
+                            )}
+                        ></Controller>
+                    </ListItem>
                     <ListItem>
                         <Controller 
                             name="email"
@@ -90,12 +116,34 @@ export default function Login({themeObj}) {
                         ></Controller>
                     </ListItem>
                     <ListItem>
+                        <Controller 
+                            name="confPassword"
+                            control={ control }
+                            defaultValue=""
+                            rules={ {required: true, minLength: 3} }
+                            render={({field}) => (
+                                <TextField 
+                                    variant="outlined" fullWidth id="confPassword" label="Confirm Password" 
+                                    inputProps={{type: 'password'}} error={Boolean(errors.confPassword)}
+                                    helperText={
+                                        errors.confPassword 
+                                            ? (errors.confPassword.type === 'minLength' 
+                                                ? 'Password length has to be 3 characters or more' 
+                                                : 'Confirm Password is required') 
+                                            : ''
+                                    }
+                                    {...field}
+                                ></TextField>
+                            )}
+                        ></Controller>
+                    </ListItem>
+                    <ListItem>
                         <Button variant="contained" type="submit" fullWidth color="primary">
-                            Login
+                            Register
                         </Button>
                     </ListItem>
                     <ListItem>
-                        Don't have an account?<NextLink href={`/register?redirect=${router.query.redirect || '/'}`} passHref><Link>Register</Link></NextLink>
+                        Already have an account?<NextLink href={`/login?redirect=${router.query.redirect || '/'}`} passHref><Link>Login</Link></NextLink>
                     </ListItem>
                 </List>
             </form>

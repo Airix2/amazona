@@ -31,6 +31,10 @@ const styles = {
     navbarBtn: {
         color: '#ffffff',
         textTransform: 'initial'
+    },
+    transparentbg: {
+        marginTop: '1rem',
+        backgroundColor: 'transparent'
     }
 }
 
