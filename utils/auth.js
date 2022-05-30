@@ -8,4 +8,24 @@ const signToken = (user)=> {
     );
 }
 
-export { signToken }
+const isAuth = async (req, res, next) => {
+    const  {authorization} = req.headers;
+    let answer = 1;
+    if (authorization) {
+        const token = authorization.slice(7, authorization.length);
+        jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+            if (err) {
+                answer = 'Token is not valid'
+            } else {
+                answer = 1;
+                req.user = decode;
+            }
+        })
+    } else {
+        console.log('ye3')
+        answer = 'Token is not supplied'
+    }
+    return answer
+}
+
+export { signToken, isAuth }
