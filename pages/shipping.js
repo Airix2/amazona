@@ -21,11 +21,11 @@ export default function Shipping({themeObj}) {
         if (!state.user) {
             router.push('/login?redirect=/shipping');
         }
-        setValue('fullName', shippingAddress.fullName)
-        setValue('address', shippingAddress.address)
-        setValue('city', shippingAddress.city)
-        setValue('postalCode', shippingAddress.postalCode)
-        setValue('country', shippingAddress.country)
+        setValue('fullName', shippingAddress?.fullName)
+        setValue('address', shippingAddress?.address)
+        setValue('city', shippingAddress?.city)
+        setValue('postalCode', shippingAddress?.postalCode)
+        setValue('country', shippingAddress?.country)
     }, [])
     
 
